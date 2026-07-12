@@ -35,14 +35,28 @@ class ContributionPolicyTests(unittest.TestCase):
             (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
         )
 
-    def test_skill_requires_clean_copy_and_draft_pr(self) -> None:
-        text = (ROOT / "skills/contribute-template-fix/SKILL.md").read_text(
+    def test_skill_requires_clean_copy_and_selects_pr_status_by_authority(self) -> None:
+        skill = (ROOT / "skills/contribute-template-fix/SKILL.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("чистую копию центрального репозитория", text)
-        self.assertIn("draft PR", text)
-        self.assertIn("Security Advisory", text)
-        self.assertIn("Не использовать личный private repository", text)
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+
+        self.assertIn("чистую копию центрального репозитория", skill)
+        self.assertIn("Не использовать личный private repository", skill)
+        self.assertIn("Security Advisory", skill)
+
+        # Автономная публикация остаётся черновиком, а прямое поручение владельца
+        # разрешает сразу показать полностью проверенный результат как ready.
+        for text in (skill, agents, contributing):
+            self.assertIn("allowDraftPullRequests=true", text)
+            self.assertIn("прямо поручил", text)
+            self.assertIn("ready PR", text)
+            self.assertIn("draft PR", text)
+
+        # Готовность PR не расширяет полномочия до необратимых действий.
+        self.assertIn("Не делать merge", skill)
+        self.assertIn("- делать merge;", contributing)
 
 
 if __name__ == "__main__":
