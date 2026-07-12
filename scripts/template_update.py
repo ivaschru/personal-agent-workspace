@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Проверяет и применяет release-based обновления Personal Codex Workspace.
+"""Проверяет и применяет release-based обновления Personal Agent Workspace.
 
 Скрипт меняет только управляемые manifest-файлы и служебные поля обновления в
 workspace.json. Режим ``--auto`` сам создаёт отдельный Git worktree, проверяет
@@ -31,7 +31,11 @@ from pathlib import Path
 # updater ещё отсутствует. Обычный запуск по-прежнему автоматически использует
 # репозиторий, содержащий этот файл.
 ROOT = Path(
-    os.environ.get("PERSONAL_CODEX_WORKSPACE_ROOT", Path(__file__).resolve().parent.parent)
+    os.environ.get(
+        "PERSONAL_AGENT_WORKSPACE_ROOT",
+        # Старое имя переменной остаётся fallback для bootstrap копий до 2.0.0.
+        os.environ.get("PERSONAL_CODEX_WORKSPACE_ROOT", Path(__file__).resolve().parent.parent),
+    )
 ).resolve()
 UPDATER_VERSION = "1.0.0"
 STATE_PATH = ROOT / ".local/template-update-state.json"
@@ -92,7 +96,7 @@ def request_json(url: str) -> dict:
         url,
         headers={
             "Accept": "application/vnd.github+json",
-            "User-Agent": "personal-codex-workspace-updater",
+            "User-Agent": "personal-agent-workspace-updater",
             "X-GitHub-Api-Version": "2022-11-28",
         },
     )
@@ -190,7 +194,7 @@ def download_tag(source: str, tag: str, destination: Path) -> Path:
     archive = destination / f"{tag}.tar.gz"
     request = urllib.request.Request(
         f"https://api.github.com/repos/{owner}/{repo}/tarball/{tag}",
-        headers={"User-Agent": "personal-codex-workspace-updater"},
+        headers={"User-Agent": "personal-agent-workspace-updater"},
     )
     with urllib.request.urlopen(request, timeout=60) as response, archive.open("wb") as output:
         shutil.copyfileobj(response, output)
@@ -503,7 +507,7 @@ def auto_update(target: str | None) -> int:
         print("Автоматическое обновление требует обычную локальную ветку.")
         return EXIT_USER_ACTION
 
-    branch = f"codex/template-update-v{target_version}"
+    branch = f"agent/template-update-v{target_version}"
     worktree = ROOT / ".local/template-update-worktrees" / f"v{target_version}"
     if worktree.exists() or git("show-ref", "--verify", f"refs/heads/{branch}", cwd=ROOT, check=False).returncode == 0:
         print(f"Обнаружено незавершённое обновление: {branch}")
@@ -524,7 +528,7 @@ def auto_update(target: str | None) -> int:
         target_version,
     ]
     child_environment = os.environ.copy()
-    child_environment["PERSONAL_CODEX_WORKSPACE_ROOT"] = str(worktree)
+    child_environment["PERSONAL_AGENT_WORKSPACE_ROOT"] = str(worktree)
     applied = subprocess.run(command, cwd=worktree, env=child_environment, check=False)
     if applied.returncode != 0:
         if applied.returncode == EXIT_CONFLICT:
@@ -558,7 +562,7 @@ def auto_update(target: str | None) -> int:
     committed = git(
         "commit",
         "-m",
-        f"Update Personal Codex Workspace to {target_version}",
+        f"Update Personal Agent Workspace to {target_version}",
         cwd=worktree,
         check=False,
     )
