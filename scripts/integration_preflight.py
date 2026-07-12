@@ -16,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 INTEGRATIONS = {
+    "email-mailbox": "электронная почта: API провайдера, IMAP для чтения и SMTP для отправки",
     "gas-pravosudie": "ГАС Правосудие через ЕСИА; подача и подпись остаются ручными",
     "gosuslugi": "Госуслуги и ЕСИА; проверки личности остаются ручными",
     "max-messenger": "веб-МАКС; отправка только по явной команде",
@@ -79,6 +80,16 @@ def main() -> int:
     print(f"Интеграция: {args.integration}")
     print(f"Платформа: {system}")
     print(f"Режим: {INTEGRATIONS[args.integration]}")
+
+    if args.integration == "email-mailbox":
+        config = ROOT / ".local" / "email" / "accounts.toml"
+        if config.exists():
+            print("Локальная конфигурация: найдена; значения доступов не проверялись.")
+        else:
+            print(
+                "Локальная конфигурация: отсутствует; используйте "
+                "skills/email-mailbox/references/accounts.example.toml."
+            )
 
     if args.integration == "t-bank":
         if system == "Darwin":

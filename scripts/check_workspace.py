@@ -35,6 +35,7 @@ REQUIRED_TEMPLATE_PATHS = (
     "skills/create-private-workspace/SKILL.md",
     "skills/accept-workspace-share/SKILL.md",
     "skills/contribute-template-fix/SKILL.md",
+    "skills/email-mailbox/SKILL.md",
     "skills/gas-pravosudie/SKILL.md",
     "skills/gosuslugi/SKILL.md",
     "skills/setup-workspace/SKILL.md",

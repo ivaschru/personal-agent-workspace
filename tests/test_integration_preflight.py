@@ -19,6 +19,7 @@ class IntegrationPreflightTests(unittest.TestCase):
         self.assertEqual(
             set(PREFLIGHT.INTEGRATIONS),
             {
+                "email-mailbox",
                 "gas-pravosudie",
                 "gosuslugi",
                 "max-messenger",
@@ -65,6 +66,14 @@ class IntegrationPreflightTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             self.assertNotRegex(text, r"TELEGRAM_API_ID\s*=\s*\d+")
             self.assertNotRegex(text, r"TELEGRAM_API_HASH\s*=\s*[0-9a-fA-F]{20,}")
+
+    def test_email_mailbox_has_no_personal_configuration(self) -> None:
+        root = SCRIPT.parents[1]
+        example = (
+            root / "skills/email-mailbox/references/accounts.example.toml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("owner@example.com", example)
+        self.assertNotIn("refresh_token = \"ya29.", example)
 
 
 if __name__ == "__main__":
