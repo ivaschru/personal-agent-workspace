@@ -1,6 +1,6 @@
 # Исправления центрального шаблона
 
-Центральный репозиторий: `https://github.com/ivaschru/personal-codex-workspace`.
+Центральный репозиторий: `https://github.com/ivaschru/personal-agent-workspace`.
 
 ## Что следует возвращать
 

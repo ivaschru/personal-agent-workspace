@@ -1,6 +1,6 @@
-# Personal Codex Workspace
+# Personal Agent Workspace
 
-Текущая версия: **1.6.0**.
+Текущая версия: **2.0.0**.
 
 Шаблон приватного личного репозитория, в котором Codex или Claude Code помогает вести задачи, долгосрочные проекты, источники и повторяемые процедуры.
 
@@ -20,7 +20,7 @@
 
 ```text
 Создай мне приватный личный репозиторий на основе
-https://github.com/ivaschru/personal-codex-workspace
+https://github.com/ivaschru/personal-agent-workspace
 и выполни первичную настройку.
 ```
 

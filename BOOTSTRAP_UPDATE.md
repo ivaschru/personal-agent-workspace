@@ -4,7 +4,7 @@
 
 ```text
 Установи механизм автоматических обновлений из последнего stable release
-https://github.com/ivaschru/personal-codex-workspace,
+https://github.com/ivaschru/personal-agent-workspace,
 не затрагивая мои личные данные, задачи и настройки.
 ```
 
@@ -17,7 +17,7 @@ https://github.com/ivaschru/personal-codex-workspace,
 5. Из корня приватной копии запустить проверенный updater нового release, явно передав ему корень старой копии:
 
    ```bash
-   PERSONAL_CODEX_WORKSPACE_ROOT="$PWD" \
+   PERSONAL_AGENT_WORKSPACE_ROOT="$PWD" \
      python3 .local/template-bootstrap/scripts/template_update.py --auto
    ```
 

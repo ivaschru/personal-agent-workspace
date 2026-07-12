@@ -28,7 +28,7 @@ class ContributionPolicyTests(unittest.TestCase):
         )
         self.assertEqual(
             workspace["template"]["source"],
-            "https://github.com/ivaschru/personal-codex-workspace",
+            "https://github.com/ivaschru/personal-agent-workspace",
         )
         self.assertEqual(
             workspace["template"]["version"],

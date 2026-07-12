@@ -30,6 +30,10 @@ MIGRATION = load_module(
     "automatic_updates_migration",
     ROOT / "migrations/1.3.0_add_automatic_updates.py",
 )
+SOURCE_MIGRATION = load_module(
+    "template_source_migration",
+    ROOT / "migrations/2.0.0_rename_template_source.py",
+)
 
 
 class TemplateUpdateTests(unittest.TestCase):
@@ -58,9 +62,9 @@ class TemplateUpdateTests(unittest.TestCase):
         self.assertEqual(UPDATE.parse_version("v2.10.3"), (2, 10, 3))
         self.assertEqual(
             UPDATE.repository_coordinates(
-                "https://github.com/ivaschru/personal-codex-workspace"
+                "https://github.com/ivaschru/personal-agent-workspace"
             ),
-            ("ivaschru", "personal-codex-workspace"),
+            ("ivaschru", "personal-agent-workspace"),
         )
         with self.assertRaises(ValueError):
             UPDATE.repository_coordinates("https://example.com/owner/repo")
@@ -85,7 +89,7 @@ class TemplateUpdateTests(unittest.TestCase):
                 patch.object(UPDATE, "safe_extract", return_value=extracted),
             ):
                 result = UPDATE.download_tag(
-                    "https://github.com/ivaschru/personal-codex-workspace",
+                    "https://github.com/ivaschru/personal-agent-workspace",
                     "v1.2.0",
                     destination,
                 )
@@ -141,6 +145,25 @@ class TemplateUpdateTests(unittest.TestCase):
             updated.write_text(json.dumps(after), encoding="utf-8")
             with self.assertRaises(ValueError):
                 UPDATE.validate_workspace_changes(original, updated)
+
+    def test_source_migration_is_idempotent_and_preserves_custom_upstream(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            workspace = Path(temp) / "workspace.json"
+            payload = {
+                "owner": {"displayName": "Private"},
+                "template": {"source": SOURCE_MIGRATION.OLD_SOURCE, "version": "1.6.0"},
+            }
+            workspace.write_text(json.dumps(payload), encoding="utf-8")
+            self.assertTrue(SOURCE_MIGRATION.migrate(workspace))
+            migrated = json.loads(workspace.read_text(encoding="utf-8"))
+            self.assertEqual(migrated["template"]["source"], SOURCE_MIGRATION.NEW_SOURCE)
+            self.assertFalse(SOURCE_MIGRATION.migrate(workspace))
+
+            migrated["template"]["source"] = "https://github.com/example/custom"
+            workspace.write_text(json.dumps(migrated), encoding="utf-8")
+            self.assertFalse(SOURCE_MIGRATION.migrate(workspace))
+            preserved = json.loads(workspace.read_text(encoding="utf-8"))
+            self.assertEqual(preserved["template"]["source"], "https://github.com/example/custom")
 
     def test_workspace_guard_allows_only_initial_empty_modules(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
