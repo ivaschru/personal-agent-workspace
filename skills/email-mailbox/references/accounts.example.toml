@@ -1,0 +1,108 @@
+# Скопируйте этот файл в `.local/email/accounts.toml`, заполните только нужные
+# секции и выполните `chmod 600 .local/email/accounts.toml`. Файл назначения
+# игнорируется Git и может содержать секреты. Этот пример секретов не содержит.
+
+schema_version = 1
+
+[[accounts]]
+id = "personal-gmail"
+address = "owner@example.com"
+provider = "gmail"
+read_order = ["gmail-api", "imap"]
+send_order = ["gmail-api", "smtp"]
+
+# Для чтения достаточно OAuth-приложения с Gmail API и минимально необходимым
+# scope. Refresh token хранится только в локальной ignored-копии файла.
+[accounts.gmail_api_read]
+client_id = "PASTE_LOCAL_CLIENT_ID"
+client_secret = "PASTE_LOCAL_CLIENT_SECRET"
+refresh_token = "PASTE_LOCAL_REFRESH_TOKEN_WITH_GMAIL_READONLY"
+
+# Отправка – отдельный OAuth grant с `gmail.send`. Если отправка через API не
+# нужна, удалите секцию и исключите `gmail-api` из send_order.
+[accounts.gmail_api_send]
+client_id = "PASTE_LOCAL_CLIENT_ID"
+client_secret = "PASTE_LOCAL_CLIENT_SECRET"
+refresh_token = "PASTE_LOCAL_REFRESH_TOKEN_WITH_GMAIL_SEND"
+
+# Gmail IMAP требует отдельного широкого почтового доступа. Удалите эту секцию,
+# если осознанный резервный IMAP-доступ не нужен.
+[accounts.imap]
+host = "imap.gmail.com"
+port = 993
+auth = "oauth2"
+client_id = "PASTE_LOCAL_CLIENT_ID"
+client_secret = "PASTE_LOCAL_CLIENT_SECRET"
+refresh_token = "PASTE_LOCAL_REFRESH_TOKEN_WITH_MAIL_SCOPE"
+token_url = "https://oauth2.googleapis.com/token"
+
+[accounts.smtp]
+host = "smtp.gmail.com"
+port = 465
+security = "tls"
+auth = "oauth2"
+client_id = "PASTE_LOCAL_CLIENT_ID"
+client_secret = "PASTE_LOCAL_CLIENT_SECRET"
+refresh_token = "PASTE_LOCAL_REFRESH_TOKEN_WITH_MAIL_SCOPE"
+token_url = "https://oauth2.googleapis.com/token"
+
+[[accounts]]
+id = "yandex"
+address = "owner@yandex.ru"
+provider = "yandex"
+read_order = ["imap"]
+send_order = ["smtp"]
+
+# Яндекс поддерживает OAuth XOAUTH2 и отдельное право IMAP только на чтение.
+[accounts.imap]
+host = "imap.yandex.com"
+port = 993
+auth = "oauth2"
+access_token = "PASTE_LOCAL_OAUTH_TOKEN_WITH_MAIL_IMAP_RO"
+
+[accounts.smtp]
+host = "smtp.yandex.com"
+port = 465
+security = "tls"
+auth = "oauth2"
+access_token = "PASTE_LOCAL_OAUTH_TOKEN_WITH_MAIL_SMTP"
+
+[[accounts]]
+id = "mailru"
+address = "owner@mail.ru"
+provider = "mailru"
+read_order = ["imap"]
+send_order = ["smtp"]
+
+[accounts.imap]
+host = "imap.mail.ru"
+port = 993
+auth = "password"
+password = "PASTE_LOCAL_EXTERNAL_APP_PASSWORD"
+
+[accounts.smtp]
+host = "smtp.mail.ru"
+port = 465
+security = "tls"
+auth = "password"
+password = "PASTE_LOCAL_EXTERNAL_APP_PASSWORD"
+
+[[accounts]]
+id = "rambler"
+address = "owner@rambler.ru"
+provider = "rambler"
+read_order = ["imap"]
+send_order = ["smtp"]
+
+[accounts.imap]
+host = "imap.rambler.ru"
+port = 993
+auth = "password"
+password = "PASTE_LOCAL_EXTERNAL_APP_PASSWORD"
+
+[accounts.smtp]
+host = "smtp.rambler.ru"
+port = 465
+security = "tls"
+auth = "password"
+password = "PASTE_LOCAL_EXTERNAL_APP_PASSWORD"

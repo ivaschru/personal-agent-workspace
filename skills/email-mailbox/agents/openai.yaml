@@ -1,0 +1,4 @@
+interface:
+  display_name: "Электронная почта"
+  short_description: "Безопасная почта через API, IMAP и SMTP"
+  default_prompt: "Используй $email-mailbox, чтобы найти и прочитать выбранные письма в настроенном почтовом ящике."
