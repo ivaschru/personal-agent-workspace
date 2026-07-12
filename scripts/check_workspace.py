@@ -19,12 +19,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_TEMPLATE_PATHS = (
     "AGENTS.md",
+    "BOOTSTRAP_UPDATE.md",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
     "INTEGRATIONS.md",
     "SETUP.md",
     "VERSION",
     "PROFILE.example.md",
+    "scripts/build_template_manifest.py",
+    "scripts/template_update.py",
     "workspace.example.json",
     "templates/task/README.md",
     "templates/project/README.md",
@@ -43,6 +46,8 @@ REQUIRED_TEMPLATE_PATHS = (
     "skills/t-bank/SKILL.md",
     "skills/telegram-messenger/SKILL.md",
     "skills/trelio/SKILL.md",
+    "skills/update-workspace-template/SKILL.md",
+    "template-manifest.json",
 )
 TEXT_SUFFIXES = {".md", ".json", ".yml", ".yaml", ".py", ".txt"}
 SUSPICIOUS_PATTERNS = {
@@ -101,6 +106,21 @@ def check_template(errors: list[str]) -> None:
     if contributions.get("securityReportsPrivate") is not True:
         fail("Security reports должны оставаться приватными", errors)
 
+    updates = example.get("updates", {}) if example else {}
+    for key in ("autoCheck", "autoApply", "autoCommit", "autoPush", "rollbackOnFailure"):
+        if updates.get(key) is not True:
+            fail(f"Update policy должна включать {key}=true по умолчанию", errors)
+
+    manifest_path = ROOT / "template-manifest.json"
+    if manifest_path.exists():
+        manifest = read_json(manifest_path, errors)
+        if version_path.exists() and manifest.get("version") != version:
+            fail("template-manifest.json.version должен совпадать с VERSION", errors)
+        if manifest.get("updateMode") != "automatic":
+            fail("Release manifest должен использовать automatic updateMode", errors)
+        if manifest.get("requiresUserAction") is not False:
+            fail("Release manifest не должен требовать ручного действия по умолчанию", errors)
+
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:
             continue
@@ -110,24 +130,38 @@ def check_template(errors: list[str]) -> None:
                 fail(f"{path.relative_to(ROOT)}: найден {label}", errors)
 
 
-def check_configured(errors: list[str]) -> None:
-    """Проверяет минимальный результат персональной и машинной настройки."""
+def check_installed(errors: list[str]) -> None:
+    """Проверяет переносимую конфигурацию без machine-local состояния."""
 
-    profile = ROOT / "PROFILE.md"
     workspace = ROOT / "workspace.json"
+    if not workspace.exists():
+        fail("После настройки отсутствует: workspace.json", errors)
+        return
+
+    data = read_json(workspace, errors)
+    if data and data.get("initialized") is not True:
+        fail("workspace.json должен содержать initialized=true", errors)
+    visibility = data.get("privacy", {}).get("repositoryVisibility")
+    if visibility not in {"private", "local-only"}:
+        fail("Видимость должна быть подтверждена как private или local-only", errors)
+
+    version_path = ROOT / "VERSION"
+    if version_path.exists() and data:
+        installed_version = data.get("template", {}).get("version")
+        if installed_version != version_path.read_text(encoding="utf-8").strip():
+            fail("workspace.json.template.version должен совпадать с VERSION", errors)
+
+
+def check_configured(errors: list[str]) -> None:
+    """Проверяет персональную конфигурацию вместе с текущим компьютером."""
+
+    check_installed(errors)
+    profile = ROOT / "PROFILE.md"
     machine = ROOT / ".local/machine-setup.json"
 
-    for path in (profile, workspace, machine):
+    for path in (profile, machine):
         if not path.exists():
             fail(f"После настройки отсутствует: {path.relative_to(ROOT)}", errors)
-
-    if workspace.exists():
-        data = read_json(workspace, errors)
-        if data and data.get("initialized") is not True:
-            fail("workspace.json должен содержать initialized=true", errors)
-        visibility = data.get("privacy", {}).get("repositoryVisibility")
-        if visibility not in {"private", "local-only"}:
-            fail("Видимость должна быть подтверждена как private или local-only", errors)
 
     if machine.exists():
         read_json(machine, errors)
@@ -135,13 +169,17 @@ def check_configured(errors: list[str]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("template", "configured"), required=True)
+    parser.add_argument(
+        "--mode", choices=("template", "installed", "configured"), required=True
+    )
     args = parser.parse_args()
 
     errors: list[str] = []
     check_required_paths(errors)
     if args.mode == "template":
         check_template(errors)
+    elif args.mode == "installed":
+        check_installed(errors)
     else:
         check_configured(errors)
 

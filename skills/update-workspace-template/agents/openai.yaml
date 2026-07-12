@@ -1,0 +1,4 @@
+interface:
+  display_name: "Обновить личное пространство"
+  short_description: "Автоматическое безопасное обновление из шаблона"
+  default_prompt: "Используй $update-workspace-template, чтобы автоматически обновить личное пространство из центрального stable release."

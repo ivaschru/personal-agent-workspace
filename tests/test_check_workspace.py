@@ -58,6 +58,19 @@ class ConfiguredWorkspaceTests(unittest.TestCase):
             CHECK.check_configured(errors)
         self.assertTrue(any("private или local-only" in error for error in errors))
 
+    def test_installed_version_must_match_workspace(self) -> None:
+        root = self.make_workspace("private")
+        (root / "VERSION").write_text("1.3.0\n", encoding="utf-8")
+        workspace = json.loads((root / "workspace.json").read_text(encoding="utf-8"))
+        workspace["template"] = {"version": "1.2.0"}
+        (root / "workspace.json").write_text(
+            json.dumps(workspace), encoding="utf-8"
+        )
+        errors: list[str] = []
+        with patch.object(CHECK, "ROOT", root):
+            CHECK.check_installed(errors)
+        self.assertTrue(any("должен совпадать с VERSION" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
