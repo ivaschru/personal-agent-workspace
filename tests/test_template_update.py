@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,7 +47,7 @@ class TemplateUpdateTests(unittest.TestCase):
         manifest = json.loads(
             (ROOT / "template-manifest.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "1.3.0")
+        self.assertEqual(manifest["version"], "1.3.1")
         self.assertEqual(manifest["updateMode"], "automatic")
         self.assertIs(manifest["requiresUserAction"], False)
 
@@ -66,6 +68,26 @@ class TemplateUpdateTests(unittest.TestCase):
         self.assertEqual(UPDATE.decide_file_action(b"a", b"a", None), "delete")
         self.assertEqual(UPDATE.decide_file_action(b"a", b"local", b"a"), "noop")
         self.assertEqual(UPDATE.decide_file_action(b"a", b"local", b"new"), "merge")
+
+    def test_download_creates_archive_parent(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            destination = Path(temp) / "missing" / "base"
+            extracted = destination / "v1.2.0" / "root"
+            with (
+                patch.object(
+                    UPDATE.urllib.request,
+                    "urlopen",
+                    return_value=io.BytesIO(b"test archive"),
+                ),
+                patch.object(UPDATE, "safe_extract", return_value=extracted),
+            ):
+                result = UPDATE.download_tag(
+                    "https://github.com/ivaschru/personal-codex-workspace",
+                    "v1.2.0",
+                    destination,
+                )
+            self.assertEqual(result, extracted)
+            self.assertEqual((destination / "v1.2.0.tar.gz").read_bytes(), b"test archive")
 
     def test_workspace_guard_allows_only_service_fields(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

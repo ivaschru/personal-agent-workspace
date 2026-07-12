@@ -30,7 +30,7 @@ class ContributionPolicyTests(unittest.TestCase):
             workspace["template"]["source"],
             "https://github.com/ivaschru/personal-codex-workspace",
         )
-        self.assertEqual(workspace["template"]["version"], "1.3.0")
+        self.assertEqual(workspace["template"]["version"], "1.3.1")
 
     def test_skill_requires_clean_copy_and_draft_pr(self) -> None:
         text = (ROOT / "skills/contribute-template-fix/SKILL.md").read_text(

@@ -182,6 +182,9 @@ def safe_extract(archive: Path, destination: Path) -> Path:
 
 def download_tag(source: str, tag: str, destination: Path) -> Path:
     owner, repo = repository_coordinates(source)
+    # TemporaryDirectory создаёт только общий root. Для base/target используются
+    # отдельные подпапки, поэтому их нужно создать до открытия archive на запись.
+    destination.mkdir(parents=True, exist_ok=True)
     archive = destination / f"{tag}.tar.gz"
     request = urllib.request.Request(
         f"https://api.github.com/repos/{owner}/{repo}/tarball/{tag}",
