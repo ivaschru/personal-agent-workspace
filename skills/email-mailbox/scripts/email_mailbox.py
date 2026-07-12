@@ -663,6 +663,9 @@ def smtp_connection(
         else:
             raise MailboxError("SMTP без TLS запрещён.")
 
+        # `SMTP.login()` сам выполняет EHLO, а ручной XOAUTH2 – нет. Явный вызов
+        # нужен и для SMTP_SSL: без него Gmail отвечает 503 до проверки токена.
+        connection.ehlo_or_helo_if_needed()
         auth = str(config.get("auth", "password"))
         if auth == "oauth2":
             token = oauth_access_token(config)
