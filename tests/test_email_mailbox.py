@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import tempfile
 import unittest
 from unittest import mock
 from email.message import EmailMessage
@@ -19,6 +20,16 @@ assert SPEC and SPEC.loader
 MAILBOX = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MAILBOX
 SPEC.loader.exec_module(MAILBOX)
+
+OAUTH_SCRIPT = (
+    Path(__file__).resolve().parents[1]
+    / "skills/email-mailbox/scripts/gmail_oauth_authorize.py"
+)
+OAUTH_SPEC = importlib.util.spec_from_file_location("gmail_oauth_authorize", OAUTH_SCRIPT)
+assert OAUTH_SPEC and OAUTH_SPEC.loader
+OAUTH = importlib.util.module_from_spec(OAUTH_SPEC)
+sys.modules[OAUTH_SPEC.name] = OAUTH
+OAUTH_SPEC.loader.exec_module(OAUTH)
 
 
 class EmailMailboxTests(unittest.TestCase):
@@ -144,6 +155,19 @@ class EmailMailboxTests(unittest.TestCase):
                 continue
             text = path.read_text(encoding="utf-8", errors="ignore").lower()
             self.assertNotIn("pop3", text, path)
+
+    def test_gmail_oauth_updates_only_requested_account_sections(self) -> None:
+        example = SCRIPT.parents[1] / "references/accounts.example.toml"
+        with tempfile.TemporaryDirectory() as directory:
+            config = Path(directory) / "accounts.toml"
+            config.write_text(example.read_text(encoding="utf-8"), encoding="utf-8")
+            OAUTH.write_refresh_token(config, "personal-gmail", "api", "test-refresh")
+            data = MAILBOX.tomllib.loads(config.read_text(encoding="utf-8"))
+
+        gmail = next(account for account in data["accounts"] if account["id"] == "personal-gmail")
+        self.assertEqual(gmail["gmail_api_read"]["refresh_token"], "test-refresh")
+        self.assertEqual(gmail["gmail_api_send"]["refresh_token"], "test-refresh")
+        self.assertNotEqual(gmail["imap"]["refresh_token"], "test-refresh")
 
 
 if __name__ == "__main__":

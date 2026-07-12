@@ -35,6 +35,23 @@ python3 skills/email-mailbox/scripts/email_mailbox.py doctor --account ACCOUNT -
 
 Для Gmail предпочитать Gmail API с минимальными правами. Не считать Gmail API и Gmail IMAP одним доступом: API-токен только для чтения не подходит для IMAP, которому требуется более широкое право на весь ящик. Настраивать IMAP как отдельный осознанный резервный доступ.
 
+### Gmail OAuth
+
+Каждый владелец публичного шаблона создаёт собственный Google Cloud-проект и один Desktop OAuth client для всех своих Gmail-ящиков. Не использовать общий OAuth client автора шаблона: владелец аккаунтов должен сам контролировать consent screen, client secret, квоту и отзыв доступов.
+
+Перед получением постоянных Gmail refresh-токенов перевести publishing status личного приложения из `Testing` в `In production`: Google ограничивает refresh-токены внешнего приложения в Testing семью днями, если запрошены не только базовые профильные scopes. Личное непроверенное приложение может показывать предупреждение; владелец проходит его вручную. Официальная документация: <https://developers.google.com/identity/protocols/oauth2#expiration>.
+
+После создания Desktop OAuth client заполнить `client_id` и `client_secret` в локальной конфигурации. Для каждого Gmail-аккаунта получить два независимых grants:
+
+```bash
+python3 skills/email-mailbox/scripts/gmail_oauth_authorize.py --account ACCOUNT --mode api
+python3 skills/email-mailbox/scripts/gmail_oauth_authorize.py --account ACCOUNT --mode mail
+```
+
+`api` запрашивает только `gmail.readonly` и `gmail.send` и записывает refresh token в секции Gmail API. `mail` отдельно запрашивает широкий `https://mail.google.com/` для резервных IMAP/SMTP. Скрипт поднимает временный callback только на `127.0.0.1`, проверяет случайный `state`, атомарно обновляет ignored-конфигурацию с правами `600` и не печатает токены.
+
+Открыть напечатанный `AUTH_URL` в браузере с нужным аккаунтом. Предупреждение непроверенного OAuth-приложения и экран согласия владелец проходит лично. После изменения токенов пересобрать зашифрованный recovery scope.
+
 ## Поиск и чтение
 
 Сначала выполнять узкий поиск:
