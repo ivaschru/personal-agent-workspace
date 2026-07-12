@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.4.0",
+  "version": "1.5.0",
   "updateMode": "automatic",
   "updaterVersion": "1.0.0",
   "minimumUpdaterVersion": "1.0.0",
@@ -79,7 +79,7 @@
     ".gitignore": "3ced7fae4d782bfa47a31465bd24b622436227b9c96a2ad8c0a2192112ddc3e4",
     "AGENTS.md": "341f21dc29d41ebc737fa46a9378229f03a692ef9a2b34b25dce5743f025a395",
     "BOOTSTRAP_UPDATE.md": "3dd6bb7ddeb4c4a150535bb307706f933e21a8cef092508a949169bee40a5677",
-    "CHANGELOG.md": "339d297f2186f33935bdee18c277a760f97a6ca18af7b2794ebfa9185c7536a6",
+    "CHANGELOG.md": "fb30edc87278b443fb144699ee7fdb122eaf66c76e9287e98555739b08693ee5",
     "CONTRIBUTING.md": "951b72ded8fd9cd27b08c8a83523a29ab1e8ff970f7268545adf85c3a3a7314c",
     "INTEGRATIONS.md": "44e9c95f3a16d56b894f217ce5b5aff2e3b357cfc4db63897c27d472bef262e1",
     "LICENSE": "43b5197607daafebffe6335cff4ad65e7c4ed8aaf237f77f7df4b47ae86802d2",
@@ -87,7 +87,7 @@
     "README.md": "e600d93ceca8c6c930ddad91399388f23f24ffe9d4c53ca9ba2ba8f5cb2fea33",
     "SECURITY.md": "b2f1ff9d14a650b3579b5054d413f8f0fa1860a7543c42f5f965be6f3c1c11cc",
     "SETUP.md": "595e41bb22c26474c483ed255de83cababfd5bf369be677a8eb18b9a35b21288",
-    "VERSION": "78b591400c56b7b67b8cb3b2b8a8e65e9093897f02ce0878e6b5405c68620fa7",
+    "VERSION": "acb57a7135b2d7d6e665f67f056e21353023b93835f54def1ae523bf76f1bfb3",
     "entities/README.md": "2e5dfef89e80c3fe97298d7d6793ce14c8268d8197a489f2d8ce54987007dec8",
     "migrations/1.3.0_add_automatic_updates.py": "c9be8dc0d12fe5cd365098127ea314afc8460538ea9df43d784d46845f447168",
     "migrations/1.4.0_add_workspace_modules.py": "24d03dd5c3bc491589898d83a71ffc3506506c21546177d764a9daea1f581161",
@@ -143,13 +143,13 @@
     "templates/project/status.md": "28fa8a976f25554f7a7f393d8ee5ee32ff08c9991df61dd8cc5e0c507e4d478f",
     "templates/task/README.md": "bb1bea3a8d4353a82caebec9e72e2af33b841fd76f555a15fe842e34a0fda3aa",
     "templates/task/log.md": "5843dabba56776f7568ca8889565f253e242e719fe0d07b635bf5155b7b422ee",
-    "tests/test_bootstrap_integration.py": "15bd5a941bd39c459b92cad49314882646122675841d30c1f46616acc1049cdb",
+    "tests/test_bootstrap_integration.py": "1a314a296a53d987cf5bda8054b8522d7f96a47d99072e9b190aebf1bcec1f60",
     "tests/test_check_workspace.py": "3b723642222978a14ed6a03fb184ea2395fb4b5afd3726bcf39bf759b298baa7",
     "tests/test_contribution_policy.py": "c68dc3818f815d9794e1474293aa5f5dbf2145bf2575156e78f94acedc3252a5",
     "tests/test_email_mailbox.py": "071146e75cee4183f51549f52185f9224c3815f93dd90498d18de370e9b0aa8e",
     "tests/test_integration_preflight.py": "79b38b2d54f9a3ddf2e27b67dbcf3bb63121852e349b038a151be06a91aa9b09",
-    "tests/test_template_update.py": "9a011d44c53cdad21ee9743e961e0c54845dcc6f5cc1b994fd560e7af4bd7173",
+    "tests/test_template_update.py": "7d4033c59495522211d0f32ce952a536e8e1ed459b84f32f7e56808fc9a9e94b",
     "tests/test_workspace_modules.py": "f3c64315d4303299fb73f754cd1c0e45655ad0792372da0b787f905443d76d78",
-    "workspace.example.json": "086af0eecefdebf7788a80cd6ffa631d930f15cb7d0f9c2aee1427ed5618d24d"
+    "workspace.example.json": "e2559fda8b8df9f91ab6ecb33ecc346f9274cfec183509ce67973a0b4db2e914"
   }
 }

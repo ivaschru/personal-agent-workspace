@@ -127,7 +127,10 @@ class BootstrapIntegrationTests(unittest.TestCase):
             migrated = json.loads(
                 (private / "workspace.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(migrated["template"]["version"], "1.4.0")
+            # Bootstrap обязан записать версию проверяемого release, а не
+            # застывшее значение конкретного выпуска из истории теста.
+            release_version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+            self.assertEqual(migrated["template"]["version"], release_version)
             self.assertEqual(migrated["owner"]["displayName"], "Private Owner")
             self.assertIs(migrated["updates"]["autoApply"], True)
             self.assertEqual(migrated["modules"], [])

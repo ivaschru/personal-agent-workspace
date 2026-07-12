@@ -47,7 +47,10 @@ class TemplateUpdateTests(unittest.TestCase):
         manifest = json.loads(
             (ROOT / "template-manifest.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["version"], "1.4.0")
+        # Сверяем manifest с каноническим VERSION, чтобы сам релизный тест не
+        # требовал ручной правки при каждом корректном повышении версии.
+        version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(manifest["version"], version)
         self.assertEqual(manifest["updateMode"], "automatic")
         self.assertIs(manifest["requiresUserAction"], False)
 

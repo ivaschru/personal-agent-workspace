@@ -3,7 +3,7 @@
   "initialized": false,
   "template": {
     "source": "https://github.com/ivaschru/personal-codex-workspace",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   "updates": {
     "channel": "stable",
