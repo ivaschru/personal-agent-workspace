@@ -77,7 +77,7 @@
   "files": {
     ".github/workflows/validate.yml": "76f6688598897af1b8f33e99db50badfa0a287dfda1ed31b4efbbfa505417307",
     ".gitignore": "3ced7fae4d782bfa47a31465bd24b622436227b9c96a2ad8c0a2192112ddc3e4",
-    "AGENTS.md": "341f21dc29d41ebc737fa46a9378229f03a692ef9a2b34b25dce5743f025a395",
+    "AGENTS.md": "ddd54e1e6d0531fe8e463d5900b10edf21e35b782a652d0229e2bfc90b48b952",
     "BOOTSTRAP_UPDATE.md": "3dd6bb7ddeb4c4a150535bb307706f933e21a8cef092508a949169bee40a5677",
     "CHANGELOG.md": "fb30edc87278b443fb144699ee7fdb122eaf66c76e9287e98555739b08693ee5",
     "CONTRIBUTING.md": "951b72ded8fd9cd27b08c8a83523a29ab1e8ff970f7268545adf85c3a3a7314c",
@@ -144,6 +144,7 @@
     "templates/task/README.md": "bb1bea3a8d4353a82caebec9e72e2af33b841fd76f555a15fe842e34a0fda3aa",
     "templates/task/log.md": "5843dabba56776f7568ca8889565f253e242e719fe0d07b635bf5155b7b422ee",
     "tests/test_bootstrap_integration.py": "1a314a296a53d987cf5bda8054b8522d7f96a47d99072e9b190aebf1bcec1f60",
+    "tests/test_chat_title_policy.py": "e07b2b53b60736c2afc0e05aaa66f73d0ac65592be375947e86d8074b230df82",
     "tests/test_check_workspace.py": "3b723642222978a14ed6a03fb184ea2395fb4b5afd3726bcf39bf759b298baa7",
     "tests/test_contribution_policy.py": "c68dc3818f815d9794e1474293aa5f5dbf2145bf2575156e78f94acedc3252a5",
     "tests/test_email_mailbox.py": "071146e75cee4183f51549f52185f9224c3815f93dd90498d18de370e9b0aa8e",
