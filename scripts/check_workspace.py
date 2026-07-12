@@ -26,6 +26,7 @@ REQUIRED_TEMPLATE_PATHS = (
     "SETUP.md",
     "VERSION",
     "PROFILE.example.md",
+    "RELEASES.md",
     "scripts/build_template_manifest.py",
     "scripts/template_update.py",
     "scripts/workspace_modules.py",
