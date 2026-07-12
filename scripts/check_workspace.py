@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_TEMPLATE_PATHS = (
     "AGENTS.md",
     "CHANGELOG.md",
+    "CONTRIBUTING.md",
     "INTEGRATIONS.md",
     "SETUP.md",
     "VERSION",
@@ -28,6 +29,7 @@ REQUIRED_TEMPLATE_PATHS = (
     "templates/task/README.md",
     "templates/project/README.md",
     "skills/create-private-workspace/SKILL.md",
+    "skills/contribute-template-fix/SKILL.md",
     "skills/gas-pravosudie/SKILL.md",
     "skills/gosuslugi/SKILL.md",
     "skills/setup-workspace/SKILL.md",
@@ -87,6 +89,16 @@ def check_template(errors: list[str]) -> None:
         version = version_path.read_text(encoding="utf-8").strip()
         if not re.fullmatch(r"\d+\.\d+\.\d+", version):
             fail("VERSION должен содержать SemVer вида X.Y.Z", errors)
+        if example and example.get("template", {}).get("version") != version:
+            fail("workspace.example.json.template.version должен совпадать с VERSION", errors)
+
+    contributions = example.get("contributions", {}) if example else {}
+    if contributions.get("allowDraftPullRequests") is not True:
+        fail("Публичный шаблон должен включать draft PR policy по умолчанию", errors)
+    if contributions.get("allowPublicIssues") is not False:
+        fail("Публичные issues не должны быть разрешены по умолчанию", errors)
+    if contributions.get("securityReportsPrivate") is not True:
+        fail("Security reports должны оставаться приватными", errors)
 
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:

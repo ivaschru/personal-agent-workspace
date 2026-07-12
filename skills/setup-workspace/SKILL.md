@@ -33,6 +33,7 @@ description: Настраивает новую личную копию Personal 
 - создать `PROFILE.md` без секретов и непроверенных предположений;
 - создать `workspace.json` со значением `initialized=true`;
 - сохранить выбранную модель приватности явно;
+- сохранить `template.source`, `template.version` и contribution policy; оставить `allowDraftPullRequests=true`, если владелец не выбрал opt-out;
 - прочитать `INTEGRATIONS.md` и записать выбранные интеграции в `features.externalIntegrations.enabled`;
 - не включать внешние интеграции, которые пользователь не выбирал; разрешить безопасное включение по первому явному запросу.
 

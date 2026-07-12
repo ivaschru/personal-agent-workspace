@@ -1,6 +1,17 @@
 {
   "schemaVersion": 1,
   "initialized": false,
+  "template": {
+    "source": "https://github.com/ivaschru/personal-codex-workspace",
+    "version": "1.2.0"
+  },
+  "contributions": {
+    "allowDraftPullRequests": true,
+    "allowPublicIssues": false,
+    "requireCleanReproduction": true,
+    "requirePrivacyScan": true,
+    "securityReportsPrivate": true
+  },
   "owner": {
     "displayName": "TODO",
     "language": "ru",

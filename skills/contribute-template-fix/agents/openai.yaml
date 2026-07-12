@@ -1,0 +1,4 @@
+interface:
+  display_name: "Исправить центральный шаблон"
+  short_description: "Безопасный draft PR с универсальным исправлением"
+  default_prompt: "Используй $contribute-template-fix, чтобы проверить общий баг и отправить обезличенный draft PR в центральный шаблон."
