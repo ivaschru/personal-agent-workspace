@@ -1,0 +1,4 @@
+interface:
+  display_name: "Мессенджер МАКС"
+  short_description: "Чтение и отправка в выбранном чате МАКС"
+  default_prompt: "Используй $max-messenger для работы с конкретным чатом в веб-версии МАКС."

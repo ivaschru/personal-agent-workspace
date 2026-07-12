@@ -1,0 +1,4 @@
+interface:
+  display_name: "Заказное письмо"
+  short_description: "Подготовка электронного заказного письма"
+  default_prompt: "Используй $russian-post-registered-mail для подготовки электронного заказного письма."

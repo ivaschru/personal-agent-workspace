@@ -20,6 +20,9 @@
     "tasks": true,
     "projects": true,
     "entities": false,
-    "externalIntegrations": []
+    "externalIntegrations": {
+      "setupMode": "on-demand",
+      "enabled": []
+    }
   }
 }

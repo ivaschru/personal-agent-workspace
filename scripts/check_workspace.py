@@ -19,16 +19,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_TEMPLATE_PATHS = (
     "AGENTS.md",
+    "CHANGELOG.md",
+    "INTEGRATIONS.md",
     "SETUP.md",
+    "VERSION",
     "PROFILE.example.md",
     "workspace.example.json",
     "templates/task/README.md",
     "templates/project/README.md",
     "skills/create-private-workspace/SKILL.md",
+    "skills/gas-pravosudie/SKILL.md",
+    "skills/gosuslugi/SKILL.md",
     "skills/setup-workspace/SKILL.md",
+    "skills/max-messenger/SKILL.md",
     "skills/manage-personal-task/SKILL.md",
     "skills/manage-personal-project/SKILL.md",
+    "skills/ozon-buyer-search/SKILL.md",
     "skills/process-incoming-file/SKILL.md",
+    "skills/russian-post-registered-mail/SKILL.md",
+    "skills/t-bank/SKILL.md",
 )
 TEXT_SUFFIXES = {".md", ".json", ".yml", ".yaml", ".py", ".txt"}
 SUSPICIOUS_PATTERNS = {
@@ -70,6 +79,12 @@ def check_template(errors: list[str]) -> None:
     example = read_json(ROOT / "workspace.example.json", errors)
     if example and example.get("initialized") is not False:
         fail("workspace.example.json должен содержать initialized=false", errors)
+
+    version_path = ROOT / "VERSION"
+    if version_path.exists():
+        version = version_path.read_text(encoding="utf-8").strip()
+        if not re.fullmatch(r"\d+\.\d+\.\d+", version):
+            fail("VERSION должен содержать SemVer вида X.Y.Z", errors)
 
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:
