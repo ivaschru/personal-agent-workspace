@@ -72,6 +72,27 @@ class ConfiguredWorkspaceTests(unittest.TestCase):
             CHECK.check_installed(errors)
         self.assertTrue(any("должен совпадать с VERSION" in error for error in errors))
 
+    def test_encrypted_recovery_requires_protected_plan(self) -> None:
+        root = self.make_workspace("private")
+        workspace = json.loads((root / "workspace.json").read_text(encoding="utf-8"))
+        workspace["storage"] = {
+            "backup": "encrypted-recovery",
+            "recoveryPlan": "recovery-plan.json",
+        }
+        (root / "workspace.json").write_text(
+            json.dumps(workspace), encoding="utf-8"
+        )
+        errors: list[str] = []
+        with patch.object(CHECK, "ROOT", root):
+            CHECK.check_installed(errors)
+        self.assertTrue(any("отсутствует recovery-plan.json" in error for error in errors))
+
+        (root / "recovery-plan.json").write_text("{}\n", encoding="utf-8")
+        errors = []
+        with patch.object(CHECK, "ROOT", root):
+            CHECK.check_installed(errors)
+        self.assertEqual(errors, [])
+
 
 if __name__ == "__main__":
     unittest.main()

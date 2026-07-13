@@ -41,6 +41,8 @@ REQUIRED_TEMPLATE_PATHS = (
     "skills/contribute-template-fix/SKILL.md",
     "skills/email-mailbox/SKILL.md",
     "skills/external-file-storage/SKILL.md",
+    "skills/encrypted-recovery/SKILL.md",
+    "skills/encrypted-recovery/scripts/encrypted_recovery.py",
     "skills/gas-pravosudie/SKILL.md",
     "skills/gosuslugi/SKILL.md",
     "skills/setup-workspace/SKILL.md",
@@ -161,6 +163,17 @@ def check_installed(errors: list[str]) -> None:
         fail("Видимость должна быть подтверждена как private или local-only", errors)
     if not isinstance(data.get("modules"), list):
         fail("workspace.json.modules должен быть массивом", errors)
+
+    storage = data.get("storage", {})
+    if isinstance(storage, dict) and storage.get("backup") == "encrypted-recovery":
+        plan_name = storage.get("recoveryPlan")
+        if plan_name != "recovery-plan.json":
+            fail(
+                "encrypted-recovery должен ссылаться на recovery-plan.json",
+                errors,
+            )
+        elif not (ROOT / plan_name).is_file():
+            fail("Для encrypted-recovery отсутствует recovery-plan.json", errors)
 
     version_path = ROOT / "VERSION"
     if version_path.exists() and data:

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "encryption": "age-passphrase",
+  "storageSubdir": "recovery",
+  "retention": {
+    "keepAllDays": 30,
+    "keepWeeklyDays": 90,
+    "keepMonthlyDays": 365
+  },
+  "archives": [
+    {
+      "id": "workspace-secrets",
+      "description": "Постоянные локальные секреты Workspace, выбранные владельцем.",
+      "sources": [],
+      "required": true
+    }
+  ]
+}

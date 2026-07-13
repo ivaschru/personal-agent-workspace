@@ -197,11 +197,13 @@ class TemplateUpdateTests(unittest.TestCase):
             (root / "skills/example").mkdir(parents=True)
             (root / "tasks/2026/0001--private").mkdir(parents=True)
             (root / "skills/example/SKILL.md").write_text("safe", encoding="utf-8")
+            (root / "recovery-plan.json").write_text("private plan", encoding="utf-8")
             (root / "tasks/2026/0001--private/README.md").write_text(
                 "private", encoding="utf-8"
             )
             files = BUILD.collect_files(root, manifest)
         self.assertIn("skills/example/SKILL.md", files)
+        self.assertNotIn("recovery-plan.json", files)
         self.assertNotIn("tasks/2026/0001--private/README.md", files)
 
     def test_migration_preserves_existing_choices(self) -> None:
