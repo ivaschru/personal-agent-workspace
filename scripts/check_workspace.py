@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REQUIRED_TEMPLATE_PATHS = (
     "AGENTS.md",
+    "CLAUDE.md",
     "BOOTSTRAP_UPDATE.md",
     "CHANGELOG.md",
     "CONTRIBUTING.md",
@@ -26,16 +27,22 @@ REQUIRED_TEMPLATE_PATHS = (
     "SETUP.md",
     "VERSION",
     "PROFILE.example.md",
+    "RELEASES.md",
     "scripts/build_template_manifest.py",
     "scripts/template_update.py",
     "scripts/workspace_modules.py",
     "workspace.example.json",
     "templates/task/README.md",
+    "templates/task/external-assets.yml",
     "templates/project/README.md",
+    "templates/project/external-assets.yml",
     "skills/create-private-workspace/SKILL.md",
     "skills/accept-workspace-share/SKILL.md",
     "skills/contribute-template-fix/SKILL.md",
     "skills/email-mailbox/SKILL.md",
+    "skills/external-file-storage/SKILL.md",
+    "skills/encrypted-recovery/SKILL.md",
+    "skills/encrypted-recovery/scripts/encrypted_recovery.py",
     "skills/gas-pravosudie/SKILL.md",
     "skills/gosuslugi/SKILL.md",
     "skills/setup-workspace/SKILL.md",
@@ -88,6 +95,10 @@ def check_template(errors: list[str]) -> None:
     for forbidden in ("PROFILE.md", "workspace.json", ".local"):
         if (ROOT / forbidden).exists():
             fail(f"В публичном шаблоне не должно быть: {forbidden}", errors)
+
+    claude_path = ROOT / "CLAUDE.md"
+    if claude_path.exists() and "@AGENTS.md" not in claude_path.read_text(encoding="utf-8"):
+        fail("CLAUDE.md должен импортировать канонический AGENTS.md", errors)
 
     example = read_json(ROOT / "workspace.example.json", errors)
     if example and example.get("initialized") is not False:
@@ -152,6 +163,17 @@ def check_installed(errors: list[str]) -> None:
         fail("Видимость должна быть подтверждена как private или local-only", errors)
     if not isinstance(data.get("modules"), list):
         fail("workspace.json.modules должен быть массивом", errors)
+
+    storage = data.get("storage", {})
+    if isinstance(storage, dict) and storage.get("backup") == "encrypted-recovery":
+        plan_name = storage.get("recoveryPlan")
+        if plan_name != "recovery-plan.json":
+            fail(
+                "encrypted-recovery должен ссылаться на recovery-plan.json",
+                errors,
+            )
+        elif not (ROOT / plan_name).is_file():
+            fail("Для encrypted-recovery отсутствует recovery-plan.json", errors)
 
     version_path = ROOT / "VERSION"
     if version_path.exists() and data:

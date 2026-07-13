@@ -1,0 +1,14 @@
+# Копируйте этот файл в проект только когда ему действительно нужны файлы вне Git.
+# Все пути хранилища задаются относительно выбранного external-file-storage root,
+# поэтому manifest остаётся переносимым между компьютерами и провайдерами.
+schema_version: 1
+assets: []
+
+# Пример элемента:
+# - name: source-archive.zip
+#   storage_path: projects/example/source/source-archive.zip
+#   local_path: local-assets/source-archive.zip
+#   purpose: Восстановимый архив исходных материалов проекта.
+#   sensitivity: private
+#   updated_at: 2026-01-01
+#   sha256: null

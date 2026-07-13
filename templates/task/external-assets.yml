@@ -1,0 +1,14 @@
+# Копируйте этот файл в задачу только когда ей действительно нужны файлы вне Git.
+# Все пути хранилища задаются относительно выбранного external-file-storage root,
+# поэтому manifest остаётся переносимым между компьютерами и провайдерами.
+schema_version: 1
+assets: []
+
+# Пример элемента:
+# - name: original-scan.pdf
+#   storage_path: tasks/2026/0001--example/source/original-scan.pdf
+#   local_path: local-assets/original-scan.pdf
+#   purpose: Канонический исходник для задачи.
+#   sensitivity: private
+#   updated_at: 2026-01-01
+#   sha256: null

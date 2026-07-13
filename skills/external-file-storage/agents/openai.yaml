@@ -1,0 +1,4 @@
+interface:
+  display_name: "External file storage"
+  short_description: "Локальная папка для внешних файлов Workspace"
+  default_prompt: "Используй $external-file-storage для настройки или работы с выбранной локальной папкой внешних файлов."
